@@ -47,7 +47,7 @@ class Controller(object):
         steering = self.yaw_controller.get_steering(linear_vel, angular_vel, current_vel)
         
         # ##################################### Smooth out the steering as per walkthrough #####################################
-        # ##################################### Take current angular vel & target vel. Gett eh difference. If same then don't change steering else add some dampening to steerng #####################################
+        # ##################################### Take current angular vel & target vel. Get the difference. If same then don't change steering else add some dampening to steering #####################################
 
         vel_error = linear_vel - current_vel
         self.last_vel = current_vel

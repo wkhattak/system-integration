@@ -11,11 +11,14 @@ from flask import Flask, render_template
 from bridge import Bridge
 from conf import conf
 
-IMAGE_FREQUENCY = 1
+IMAGE_FREQUENCY = 10
 
 sio = socketio.Server()
 app = Flask(__name__)
-msgs = []
+#msgs = [] ####################################################
+# Source: https://github.com/jdleesmiller/CarND-Capstone/commit/33dae9248a73feab9b577dd135116b6575e85788
+#Changed to only send the latest message for each topic, rather than queuing out-of-date messages
+msgs = {} #########################################################
 
 dbw_enable = False
 prev_secs = 0
@@ -26,9 +29,10 @@ def connect(sid, environ):
     print("connect ", sid)
 
 def send(topic, data):
-    s = 1
-    msgs.append((topic, data))
-    #sio.emit(topic, data=json.dumps(data), skip_sid=True)
+    #s = 1
+    #msgs.append((topic, data))
+    ##sio.emit(topic, data=json.dumps(data), skip_sid=True)
+    msgs[topic] = data ###################################################
 
 bridge = Bridge(conf, send)
 
@@ -40,7 +44,8 @@ def telemetry(sid, data):
         bridge.publish_dbw_status(dbw_enable)
     bridge.publish_odometry(data)
     for i in range(len(msgs)):
-        topic, data = msgs.pop(0)
+        #topic, data = msgs.pop(0)
+	topic, data = msgs.popitem() ################################################
         sio.emit(topic, data=data, skip_sid=True)
 
 @sio.on('control')

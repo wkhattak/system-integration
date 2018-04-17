@@ -63,7 +63,7 @@ class TLDetector(object):
     def loop(self):
         rate = rospy.Rate(ROS_RATE)
         while not rospy.is_shutdown():
-	    self.image_cb_dummy()
+	    #self.image_cb_dummy()############################################################
 	    rate.sleep()
 
     def pose_cb(self, msg):
@@ -79,7 +79,7 @@ class TLDetector(object):
         self.lights = msg.lights
 	#rospy.logwarn('traffic_cb called!!!')
 
-    def image_cb_dummy(self):
+    def image_cb_dummy(self):#####################################################################
 	self.image_cb(None)
 	
     def image_cb(self, msg):
