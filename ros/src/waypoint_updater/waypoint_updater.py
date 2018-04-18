@@ -106,10 +106,9 @@ class WaypointUpdater(object):
             lane.waypoints = base_waypoints
         else:
             ##lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
-	    rospy.logwarn('Closest index: %s, TL index: %s, Farthest  index: %s', closest_idx, self.stopline_wp_idx, farthest_idx)
  	    # CHECK THIS AS THIS MIGHT BE INCORRECT
 	    base_waypoints = self.base_waypoints.waypoints[closest_idx:self.stopline_wp_idx]
-	    #rospy.logwarn('Published base_waypoints: %s', len(base_waypoints))
+	    rospy.logwarn('Closest index: %s, TL index: %s, Farthest index: %s, Wapoints: %s', closest_idx, self.stopline_wp_idx, farthest_idx, len(base_waypoints))
             lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
         
         return lane
@@ -131,6 +130,7 @@ class WaypointUpdater(object):
             
             # Sqrt can become very large (and the resulting velocity) if too far from traffic light, hence better to use current velocity
             p.twist.twist.linear.x = min(velocity, wp.twist.twist.linear.x)
+	    #rospy.logwarn('Waypoint %s velocity: %s', i, p.twist.twist.linear.x)
             temp.append(p)
         
         return temp

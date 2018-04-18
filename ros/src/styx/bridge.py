@@ -140,7 +140,6 @@ class Bridge(object):
         self.angular = self.calc_angular(data['yaw'] * math.pi/180.)
         self.publishers['current_velocity'].publish(self.create_twist(self.vel, self.angular))
 
-
     def publish_controls(self, data):
         steering, throttle, brake = data['steering_angle'], data['throttle'], data['brake']
         self.publishers['steering_report'].publish(self.create_steer(steering))
