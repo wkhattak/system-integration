@@ -207,7 +207,7 @@ bool PurePursuit::interpolateNextTarget(int next_waypoint, geometry_msgs::Point 
     // ROS_INFO("target2 : ( %lf , %lf , %lf)", target2.x, target2.y, target2.z);
     //displayLinePoint(a, b, c, target1, target2, h);  // debug tool
 
-    // check intersection is between end and start
+    // check intersection is between end and start 
     double interval = getPlaneDistance(end, start);
     if (getPlaneDistance(target1, end) < interval)
     {
