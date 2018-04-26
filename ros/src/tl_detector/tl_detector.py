@@ -47,7 +47,7 @@ class TLDetector(object):
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
-        self.light_classifier = TLClassifier(self.sim)
+        #self.light_classifier = TLClassifier(self.sim)
         self.listener = tf.TransformListener()
 
         self.state = TrafficLight.UNKNOWN
@@ -57,7 +57,9 @@ class TLDetector(object):
         
         self.waypoints_2d = None
         self.waypoint_tree = None
-
+		
+	#rospy.logwarn('self.waypoints_2d = %s', self.waypoints_2d)
+        self.light_classifier = TLClassifier(self.sim)
         #rospy.spin()
 	self.loop()
 
@@ -190,6 +192,7 @@ class TLDetector(object):
 
         if closest_light:
             state = self.get_light_state(closest_light)
+            rospy.logwarn('Traffic light state: %s', state)
             #rospy.logwarn('Closest traffic light stop line index: %s, state: %s', line_wp_idx, state)
             return line_wp_idx, state
         
