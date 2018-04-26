@@ -207,7 +207,7 @@ bool PurePursuit::interpolateNextTarget(int next_waypoint, geometry_msgs::Point 
     // ROS_INFO("target2 : ( %lf , %lf , %lf)", target2.x, target2.y, target2.z);
     //displayLinePoint(a, b, c, target1, target2, h);  // debug tool
 
-    // check intersection is between end and start
+    // check intersection is between end and start 
     double interval = getPlaneDistance(end, start);
     if (getPlaneDistance(target1, end) < interval)
     {
@@ -251,8 +251,9 @@ bool PurePursuit::verifyFollowing() const
 }
 geometry_msgs::Twist PurePursuit::calcTwist(double curvature, double cmd_velocity) const
 {
+  // According to walk through video suggestion, forcing the car to follow the points regardless
   // verify whether vehicle is following the path
-  bool following_flag = verifyFollowing();
+  bool following_flag = false;
   static double prev_angular_velocity = 0;
 
   geometry_msgs::Twist twist;
