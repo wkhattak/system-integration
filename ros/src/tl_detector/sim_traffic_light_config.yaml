@@ -12,3 +12,5 @@ stop_line_positions:
     - [351.84, 1574.65]
 sim:
     True
+debug:
+    True

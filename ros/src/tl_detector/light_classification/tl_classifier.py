@@ -1,17 +1,19 @@
 from styx_msgs.msg import TrafficLight
 import tensorflow as tf
 import numpy as np
+import os
 
-ForSIM = r'/light_classification/sim_frozen_inference_graph.pb'
-ForREAL = r'/light_classification/real_frozen_inference_graph.pb'
+ForSIM = 'light_classification/sim_frozen_inference_graph.pb'
+#ForSIM = r'/home/student/system-integration/ros/src/tl_detector/light_classification/sim_frozen_inference_graph.pb'
+ForREAL = 'light_classification/real_frozen_inference_graph.pb'
 class TLClassifier(object):
     def __init__(self, Simulation):
         #TODO load classifier
         #setup a new graph
         if Simulation:
-            Model_Path = ForSIM
+            Model_Path = os.path.join(os.getcwd(), ForSIM)
         else:
-            Model_Path = ForReal
+            Model_Path = os.path.join(os.getcwd(), ForReal)
         self.graph = tf.Graph()
         #set the graph as default graph
         with self.graph.as_default():

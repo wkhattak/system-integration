@@ -13,6 +13,7 @@ import yaml
 from scipy.spatial import KDTree
 import time
 import numpy as np
+import os
 
 STATE_COUNT_THRESHOLD = 3
 ROS_RATE = 15
@@ -58,10 +59,15 @@ class TLDetector(object):
         self.waypoints_2d = None
         self.waypoint_tree = None
 		
+	self.debug = self.config["debug"]
+	if self.debug:
+	    self.debug_file = open(os.path.join(os.getcwd(), 'debug.csv'), 'w') 
+	    #rospy.logwarn('Current workig dir: %s', os.getcwd())
+		
 	#rospy.logwarn('self.waypoints_2d = %s', self.waypoints_2d)
         self.light_classifier = TLClassifier(self.sim)
-        #rospy.spin()
-	self.loop()
+        rospy.spin()
+	#self.loop()
 
     def loop(self):
         rate = rospy.Rate(ROS_RATE)
@@ -153,7 +159,14 @@ class TLDetector(object):
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
 
         #Get classification
-        return self.light_classifier.get_classification(cv_image)
+	result = self.light_classifier.get_classification(cv_image)
+		
+	if self.debug:
+	    image_name = str(rospy.Time.now()) + '-' + str(result) + '.png'
+	    img_path = os.getcwd() + '/../../../imgs/' + image_name
+	    cv2.imwrite(img_path, cv_image)
+	    self.debug_file.write(image_name + ',' + str(result) + '\n')
+        return result
         
         
         # ############################################### TESTING ONLY ##################################################################
@@ -198,6 +211,10 @@ class TLDetector(object):
         
         #self.waypoints = None
         return -1, TrafficLight.UNKNOWN
+		
+    def __del__(self):
+        if self.debug:
+	    self.debug_file.close()
 
 if __name__ == '__main__':
     try:
