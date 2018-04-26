@@ -1,0 +1,8 @@
+Dockerfile
+LICENSE
+README.md
+ros/build/*
+ros/devel/*
+data/*
+imgs/*
+requirements.txt
