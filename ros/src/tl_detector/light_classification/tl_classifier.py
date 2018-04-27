@@ -4,7 +4,6 @@ import numpy as np
 import os
 
 ForSIM = 'light_classification/sim_frozen_inference_graph.pb'
-#ForSIM = r'/home/student/system-integration/ros/src/tl_detector/light_classification/sim_frozen_inference_graph.pb'
 ForREAL = 'light_classification/real_frozen_inference_graph.pb'
 class TLClassifier(object):
     def __init__(self, Simulation):

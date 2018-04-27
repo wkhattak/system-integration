@@ -7,3 +7,5 @@ stop_line_positions:
     - [8.0, 16.2]
 sim:
     False
+debug:
+    False

@@ -61,7 +61,8 @@ class TLDetector(object):
 		
 	self.debug = self.config["debug"]
 	if self.debug:
-	    self.debug_file = open(os.path.join(os.getcwd(), 'debug.csv'), 'w') 
+	    self.debug_file = open(os.path.join(os.getcwd(), 'debug.csv'), 'w')
+	    self.debug_file.write('Image,Prediction,Ground Truth\n')
 	    #rospy.logwarn('Current workig dir: %s', os.getcwd())
 		
 	#rospy.logwarn('self.waypoints_2d = %s', self.waypoints_2d)
@@ -156,7 +157,8 @@ class TLDetector(object):
             self.prev_light_loc = None
             return False
 
-        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        #cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
 
         #Get classification
 	result = self.light_classifier.get_classification(cv_image)
@@ -164,8 +166,8 @@ class TLDetector(object):
 	if self.debug:
 	    image_name = str(rospy.Time.now()) + '-' + str(result) + '.png'
 	    img_path = os.getcwd() + '/../../../imgs/' + image_name
-	    cv2.imwrite(img_path, cv_image)
-	    self.debug_file.write(image_name + ',' + str(result) + '\n')
+	    cv2.imwrite(img_path,  cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB))
+	    self.debug_file.write(image_name + ',' + str(result) + ',' + str(light.state) + '\n')
         return result
         
         
@@ -205,7 +207,7 @@ class TLDetector(object):
 
         if closest_light:
             state = self.get_light_state(closest_light)
-            rospy.logwarn('Traffic light state: %s', state)
+            #rospy.logwarn('Traffic light state: %s', state)
             #rospy.logwarn('Closest traffic light stop line index: %s, state: %s', line_wp_idx, state)
             return line_wp_idx, state
         
