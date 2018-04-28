@@ -14,6 +14,7 @@ from scipy.spatial import KDTree
 import time
 import numpy as np
 import os
+import time
 
 STATE_COUNT_THRESHOLD = 3
 ROS_RATE = 15
@@ -62,7 +63,7 @@ class TLDetector(object):
 	self.debug = self.config["debug"]
 	if self.debug:
 	    self.debug_file = open(os.path.join(os.getcwd(), 'debug.csv'), 'w')
-	    self.debug_file.write('Image,Prediction,Ground Truth\n')
+	    self.debug_file.write('Image,Prediction,Ground Truth,Prediction Time (sec)\n')
 	    #rospy.logwarn('Current workig dir: %s', os.getcwd())
 		
 	#rospy.logwarn('self.waypoints_2d = %s', self.waypoints_2d)
@@ -121,10 +122,8 @@ class TLDetector(object):
             light_wp = light_wp if state == TrafficLight.RED else -1
             self.last_wp = light_wp
             self.upcoming_red_light_pub.publish(Int32(light_wp))
-	    #rospy.logwarn('TL Publisher --- TL index: %s', light_wp)
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
-	    #rospy.logwarn('TL Publisher --- TL index: %s', self.last_wp)
         self.state_count += 1
 
     def get_closest_waypoint(self, x, y):
@@ -151,8 +150,6 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        
-        
         if(not self.has_image):
             self.prev_light_loc = None
             return False
@@ -161,15 +158,17 @@ class TLDetector(object):
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
 
         #Get classification
-	result = self.light_classifier.get_classification(cv_image)
-		
-	if self.debug:
-	    image_name = str(rospy.Time.now()) + '-' + str(result) + '.png'
-	    img_path = os.getcwd() + '/../../../imgs/' + image_name
-	    cv2.imwrite(img_path,  cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB))
-	    self.debug_file.write(image_name + ',' + str(result) + ',' + str(light.state) + '\n')
+        if self.debug:
+            start_time = time.time()
+        result = self.light_classifier.get_classification(cv_image)
+        if self.debug:
+            end_time = time.time()
+            elapsed = end_time - start_time
+            image_name = str(rospy.Time.now()) + '-' + str(result) + '.png'
+            img_path = os.getcwd() + '/../../../imgs/' + image_name
+            cv2.imwrite(img_path,  cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB))
+            self.debug_file.write('{},{},{},{:.2f}\n'.format(image_name, result, light.state, elapsed))
         return result
-        
         
         # ############################################### TESTING ONLY ##################################################################
         #return light.state
