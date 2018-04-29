@@ -11,7 +11,7 @@ from flask import Flask, render_template
 from bridge import Bridge
 from conf import conf
 
-IMAGE_FREQUENCY = 10
+#IMAGE_FREQUENCY = 10
 
 sio = socketio.Server()
 app = Flask(__name__)
@@ -21,8 +21,8 @@ app = Flask(__name__)
 msgs = {} #########################################################
 
 dbw_enable = False
-prev_secs = 0
-image_counter = 0
+#prev_secs = 0
+#image_counter = 0
 
 @sio.on('connect')
 def connect(sid, environ):
@@ -66,18 +66,26 @@ def trafficlights(sid, data):
 
 @sio.on('image')
 def image(sid, data):
+    '''
     current_secs = int(time.time())
     global prev_secs
     global image_counter
     global IMAGE_FREQUENCY
     if current_secs == prev_secs:
         if image_counter < IMAGE_FREQUENCY:
-	    bridge.publish_camera(data)
-	    image_counter += 1
+            bridge.publish_camera(data)
+            image_counter += 1
+        else:
+            print('Image for time: %s receieved but not published', current_secs) # this appears in .ros/logs/latest/styx_server-2-stdout.log
     else:
-	image_counter = 0
+        print('Total published images for time: %s >>> %s', current_secs, image_counter)
+        image_counter = 0
+        bridge.publish_camera(data)
+        image_counter += 1
     prev_secs = current_secs
-
+    '''
+    bridge.publish_camera(data) 
+   
 if __name__ == '__main__':
 
     # wrap Flask application with engineio's middleware

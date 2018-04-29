@@ -44,12 +44,11 @@ class TLDetector(object):
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
-	self.sim = self.config["sim"]
+        self.sim = self.config["sim"]
 
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
-        #self.light_classifier = TLClassifier(self.sim)
         self.listener = tf.TransformListener()
 
         self.state = TrafficLight.UNKNOWN
@@ -60,16 +59,14 @@ class TLDetector(object):
         self.waypoints_2d = None
         self.waypoint_tree = None
 		
-	self.debug = self.config["debug"]
-	if self.debug:
-	    self.debug_file = open(os.path.join(os.getcwd(), 'debug.csv'), 'w')
-	    self.debug_file.write('Image,Prediction,Ground Truth,Prediction Time (sec)\n')
-	    #rospy.logwarn('Current workig dir: %s', os.getcwd())
-		
-	#rospy.logwarn('self.waypoints_2d = %s', self.waypoints_2d)
+        self.debug = self.config["debug"]
+        if self.debug:
+            self.debug_file = open(os.path.join(os.getcwd(), 'debug.csv'), 'w')
+            self.debug_file.write('Image,Prediction,Ground Truth,Prediction Time (sec)\n')
+			
         self.light_classifier = TLClassifier(self.sim)
         rospy.spin()
-	#self.loop()
+        #self.loop()
 
     def loop(self):
         rate = rospy.Rate(ROS_RATE)
@@ -91,7 +88,7 @@ class TLDetector(object):
 	#rospy.logwarn('traffic_cb called!!!')
 
     def image_cb_dummy(self):#####################################################################
-	self.image_cb(None)
+        self.image_cb(None)
 	
     def image_cb(self, msg):
         """Identifies red lights in the incoming camera image and publishes the index
@@ -103,9 +100,9 @@ class TLDetector(object):
         """
         self.has_image = True
         self.camera_image = msg
-	#rospy.logwarn('Image dims --- Height: %s, Width: %s', msg.height, msg.width)
-	#image = self.bridge.imgmsg_to_cv2(msg, 'rgb8')
-	#cv2.imwrite('/home/student/CarND-Capstone-master/imgs/simulator/' + str(rospy.Time.now()) + '.png', image)
+        #rospy.logwarn('Image dims --- Height: %s, Width: %s', msg.height, msg.width)
+        #image = self.bridge.imgmsg_to_cv2(msg, 'rgb8')
+        #cv2.imwrite('/home/student/CarND-Capstone-master/imgs/simulator/' + str(rospy.Time.now()) + '.png', image)
         light_wp, state = self.process_traffic_lights()
 
         '''
@@ -154,7 +151,6 @@ class TLDetector(object):
             self.prev_light_loc = None
             return False
 
-        #cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
 
         #Get classification
@@ -165,8 +161,8 @@ class TLDetector(object):
             end_time = time.time()
             elapsed = end_time - start_time
             image_name = str(rospy.Time.now()) + '-' + str(result) + '.png'
-            img_path = os.getcwd() + '/../../../imgs/' + image_name
-            cv2.imwrite(img_path,  cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB))
+            #img_path = os.getcwd() + '/../../../imgs/' + image_name
+            #cv2.imwrite(img_path,  cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB))
             self.debug_file.write('{},{},{},{:.2f}\n'.format(image_name, result, light.state, elapsed))
         return result
         
@@ -215,7 +211,7 @@ class TLDetector(object):
 		
     def __del__(self):
         if self.debug:
-	    self.debug_file.close()
+            self.debug_file.close()
 
 if __name__ == '__main__':
     try:
