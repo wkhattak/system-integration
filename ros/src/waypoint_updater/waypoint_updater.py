@@ -24,7 +24,7 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 50 #200 # Number of waypoints we will publish. You can change this number
+LOOKAHEAD_WPS = 150 #50 #200 # Number of waypoints we will publish. You can change this number
 ROS_RATE = 25 #30
 MAX_DECEL = 0.5
 
