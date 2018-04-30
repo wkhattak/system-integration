@@ -14,7 +14,6 @@ from scipy.spatial import KDTree
 import time
 import numpy as np
 import os
-import time
 
 STATE_COUNT_THRESHOLD = 3
 ROS_RATE = 15
@@ -40,7 +39,6 @@ class TLDetector(object):
         '''
         sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
         sub4 = rospy.Subscriber('/image_color', Image, self.image_cb)
-        # ########################## Instead use raw data for image classification ################################################
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
