@@ -1,6 +1,5 @@
 Dockerfile
 LICENSE
-README.md
 ros/build/*
 ros/devel/*
 ros/src/styx/bridge.pyc
@@ -11,6 +10,4 @@ ros/src/twist_controller/lowpass.pyc
 ros/src/twist_controller/pid.pyc
 ros/src/twist_controller/twist_controller.pyc
 ros/src/twist_controller/yaw_controller.pyc
-data/*
-imgs/*
 requirements.txt
